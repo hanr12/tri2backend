@@ -31,10 +31,13 @@ class UserAPI:
             # look for password and dob
             password = body.get('password')
             dob = body.get('dob')
+            grade = body.get('grade')
+            if grade is None or len(grade) < 1:
+                return {'message': f'Grade is missing'}, 400
 
             ''' #1: Key code block, setup USER OBJECT '''
             uo = User(name=name, 
-                      uid=uid)
+                      uid=uid, grade=grade)
             
             ''' Additional garbage error checking '''
             # set password if provided
