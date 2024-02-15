@@ -24,26 +24,28 @@ class UserAPI:
             name = body.get('name')
             if name is None or len(name) < 2:
                 return {'message': f'Name is missing, or is less than 2 characters'}, 400
-            # validate age
-            age = body.get('age')
-            if age is None or len(age) < 1:
-                return {'message': f'Name is missing, or is less than 1 character'}, 400
             # validate uid
             uid = body.get('uid')
             if uid is None or len(uid) < 2:
                 return {'message': f'User ID is missing, or is less than 2 characters'}, 400
-            # look for password
+            # look for password and dob
             password = body.get('password')
+            dob = body.get('dob')
 
             ''' #1: Key code block, setup USER OBJECT '''
-            uo = User(name=name, age=age,
+            uo = User(name=name, 
                       uid=uid)
             
             ''' Additional garbage error checking '''
             # set password if provided
             if password is not None:
                 uo.set_password(password)
-
+            # convert to date type
+            if dob is not None:
+                try:
+                    uo.dob = datetime.strptime(dob, '%Y-%m-%d').date()
+                except:
+                    return {'message': f'Date of birth format error {dob}, must be mm-dd-yyyy'}, 400
             
             ''' #2: Key Code block to add user to database '''
             # create user in database
